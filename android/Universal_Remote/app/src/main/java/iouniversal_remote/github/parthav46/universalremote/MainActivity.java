@@ -9,14 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.ListView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -33,7 +32,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        fillDeviceList();
+        refreshList();
+
+        ListView device_select = (ListView) findViewById(R.id.device_select);
+        ArrayAdapter<String> device_list_adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, device_list);
+        device_select.setAdapter(device_list_adapter);
 
         Button connect = (Button) findViewById(R.id.connect);
         connect.setOnClickListener(new View.OnClickListener() {
@@ -50,15 +53,12 @@ public class MainActivity extends AppCompatActivity {
                 refreshList();
             }
         });
-
-        refreshList();
     }
 
     private void refreshList(){
         fillDeviceList();
-        Spinner device_select = (Spinner) findViewById(R.id.device_select);
-        ArrayAdapter<String> device_list_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, device_list);
-        device_list_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ListView device_select = (ListView) findViewById(R.id.device_select);
+        ArrayAdapter<String> device_list_adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, device_list);
         device_select.setAdapter(device_list_adapter);
     }
 
@@ -67,71 +67,83 @@ public class MainActivity extends AppCompatActivity {
         String subnet = getIPaddress();
         int address = subnet.lastIndexOf('.');
         subnet = subnet.substring(0, address);
-        String temp = "";
+
         for (int i = 1; i < 256; i++) {
-            String deviceIP = subnet + "." + i;
-            //Enter func to check if IP is available
-            String HTTPaddress = "http://"+deviceIP+"/inline"; //TODO: insert nodemcu server id page address
-            ServerAsyncTask task = new ServerAsyncTask(HTTPaddress);
-            Log.e("task",HTTPaddress + " ongoing");
-            task.execute();
+            String temp = subnet + "." + i;
+            String deviceIP = temp;
+            ServerAsyncTask task = new ServerAsyncTask();
+            task.execute(deviceIP);
         }
+
+
     }
 
 
 
-    private class ServerAsyncTask extends AsyncTask<URL, Void, String> {
 
-        private String Url = "";
+
+    private class ServerAsyncTask extends AsyncTask<String, Void, Boolean> {
+
         private boolean status = false;
 
-        public ServerAsyncTask(String url) {
-            super();
-            Url = url;
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            for (int i = 0; i < strings.length; i++) {
+                try {
+                    makeHttpRequest(strings[i]);
+                } catch (IOException e) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         @Override
-        protected String doInBackground(URL... urls) {
-            String response = "";
-            try {
-                URL url = new URL(Url);
+        protected void onPostExecute(Boolean aBoolean) {
+            if(aBoolean){
+                Log.e("Task refresh", "complete");
+                ListView device_select = (ListView) findViewById(R.id.device_select);
+                final ArrayAdapter<String> device_list_adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, device_list);
+                device_select.setAdapter(device_list_adapter);
 
-                response = makeHttpRequest(url);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        device_list_adapter.notifyDataSetChanged();
+                    }
+                });
             }
-            catch (MalformedURLException e){
-            }
-            catch (IOException e){
-
-            }
-            return response;
+            else Log.e("Task refresh", "incomplete");
         }
 
-        @Override
-        protected void onPostExecute(String s) {
-            if(s != ""){
-                Log.e("message",Url + " available: " + s);
-                device_list.add(Url);
-                status = true;
-            }
-        }
-
-
-        private String makeHttpRequest(URL url) throws IOException {
+        private void makeHttpRequest(String deviceIP) throws IOException {
             String Response = "";
             HttpURLConnection urlConnection = null;
             InputStream inputStream = null;
             try {
+                String HTTPaddress = "http://" + deviceIP + "/inline"; //TODO: insert nodemcu server id page address
+                Log.e("current: ",deviceIP);
+                URL url = new URL(HTTPaddress);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setReadTimeout(1000 /* milliseconds */);
                 urlConnection.setConnectTimeout(1500 /* milliseconds */);
                 urlConnection.connect();
                 inputStream = urlConnection.getInputStream();
-                Response = readFromStream(inputStream);
+                if(urlConnection.getResponseCode() == 200){
+                    device_list.add(deviceIP);
+                    Log.e("added: ",deviceIP);
+                }
+                else
+                {
+                    Log.e("no connect: ",urlConnection.getResponseMessage());
+                }
             } catch (IOException e) {
+                Log.e("error",e.toString());
                 this.cancel(true);
 
-            } finally {
+            }
+
+            finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
@@ -139,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                     inputStream.close();
                 }
             }
-            return Response;
+
         }
     }
 
