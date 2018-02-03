@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 import java.io.BufferedReader;
@@ -37,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
         ListView device_select = (ListView) findViewById(R.id.device_select);
         ArrayAdapter<String> device_list_adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, device_list);
         device_select.setAdapter(device_list_adapter);
-
+    }
+        /**
         Button connect = (Button) findViewById(R.id.connect);
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+         **/
     private void refreshList(){
         fillDeviceList();
         ListView device_select = (ListView) findViewById(R.id.device_select);

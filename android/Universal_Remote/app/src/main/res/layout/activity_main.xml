@@ -7,36 +7,26 @@
     android:orientation="vertical"
     tools:context="iouniversal_remote.github.parthav46.universalremote.MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="0sp"
-            android:id="@+id/device_select">
-        </ListView>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="61sp" />
 
-        <Button
-            android:layout_width="0sp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Refresh"
-            android:id="@+id/refresh"/>
+            <ListView
+                android:id="@+id/device_select"
+                android:layout_width="wrap_content"
+                android:layout_height="318sp"></ListView>
 
-        <Button
-            android:layout_width="0sp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Connect"
-            android:id="@+id/connect"/>
+            
+
         </LinearLayout>
 
-    </LinearLayout>
+
+
+
 </LinearLayout>
