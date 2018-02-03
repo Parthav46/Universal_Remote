@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -95,7 +96,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fillDeviceList() {
-        Toast.makeText(this, "load", Toast.LENGTH_SHORT).show();
+        RelativeLayout bgimage = (RelativeLayout) findViewById(R.id.loadImage);
+        bgimage.setVisibility(View.VISIBLE);
         device_list = new ArrayList<>();
         String subnet = getIPaddress();
         int address = subnet.lastIndexOf('.');
@@ -138,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Boolean... aBooleans) {
             if (aBooleans[0]) {
+                RelativeLayout bgimage = (RelativeLayout) findViewById(R.id.loadImage);
+                bgimage.setVisibility(View.GONE);
                 final ArrayAdapter<String> device_list_adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, device_list);
                 device_select.setAdapter(device_list_adapter);
                 runOnUiThread(new Runnable() {
