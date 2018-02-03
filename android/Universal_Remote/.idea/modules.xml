@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Universal_Remote.iml" filepath="$PROJECT_DIR$/Universal_Remote.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\RUSHI\Documents\GitHub\Universal_Remote\android\Universal_Remote\app\app.iml" filepath="C:\Users\RUSHI\Documents\GitHub\Universal_Remote\android\Universal_Remote\app\app.iml" />
     </modules>
   </component>
 </project>
