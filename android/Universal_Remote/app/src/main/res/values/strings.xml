@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Universal Remote</string>
+    <string name="TV_sheets_id">17WR6ByH8KUmUzLgbebwHYR4Q7GJbV3T7Ezpscc6Uc7k</string>
+    <string name="AC_sheets_id">1ijS315iRZH__ytYHMz0TaLCp6yF7fqbdcRrXCQMhtDA</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 </resources>
