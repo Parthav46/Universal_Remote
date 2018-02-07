@@ -1,51 +1,34 @@
 int IRledPin = 6;
 int DataLine = 2;
 
-int LOW_VAL = 600;
-int HIGH_VAL = 1200;
-int RANGE_START = 21;
-int RANGE_END = 41;
 int MODULATION_TIME = 26;
 
 String node_data = "";
 
 uint16_t IRsignal[200] = {0};
-  int arraySize = 0;
+  byte arraySize = 0;
 
 void pulseIR(long microsecs)
 {
   cli();
   bool level = HIGH;
+  int interval = (MODULATION_TIME/2)-4;
   while (microsecs > 0)
   {
     digitalWrite(IRledPin, level);
     level ^= 1;
-    delayMicroseconds(10);
+    delayMicroseconds(interval);
     digitalWrite(IRledPin, level);
     level ^= 1;
-    delayMicroseconds(10);
-    microsecs -= 26;
+    delayMicroseconds(interval);
+    microsecs -= MODULATION_TIME;
   }
   sei();
 }
 
-void EncodeData(int encodeVal)
-{
-  int tmpEncodeVal = encodeVal;
-  for (int i = RANGE_START; i <= RANGE_END; i++)
-  {
-    if (tmpEncodeVal & 0x01)
-      IRsignal[i * 2 + 1] = HIGH_VAL / 10;
-    else
-      IRsignal[i * 2 + 1] = LOW_VAL / 10;
-    tmpEncodeVal = tmpEncodeVal >> 1;
-  }
-
-}
-
 void SendIRCode()
 {
-  for (int i = 0; i < arraySize/2; i++)
+  for (int i = 0; i < arraySize; i++)
   {
     pulseIR(IRsignal[i++] * 10);
     delayMicroseconds(IRsignal[i] * 10);
@@ -65,23 +48,12 @@ void setIRsignal(String indata) {
 
 void setParams(String data) {
   int comma = data.indexOf(',');
-  LOW_VAL = (int) data.substring(0, comma).toInt();
-  data = data.substring(comma + 1);
-  comma = data.indexOf(',');
-  HIGH_VAL = (int) data.substring(0, comma).toInt();
-  data = data.substring(comma + 1);
-  comma = data.indexOf(',');
-  RANGE_START = (int) data.substring(0, comma).toInt();
-  data = data.substring(comma + 1);
-  comma = data.indexOf(',');
-  RANGE_END = (int) data.substring(0, comma).toInt();
-  data = data.substring(comma + 1);
-  comma = data.indexOf(',');
   MODULATION_TIME = (int) data.substring(0, comma).toInt();
 }
 
 void printIR() {
-  for (int i = 0; i < arraySize/2; i++) {
+  Serial.println(arraySize);
+  for (int i = 0; i < arraySize; i++) {
     Serial.print(IRsignal[i++]);
     Serial.print(" ");
     Serial.println(IRsignal[i]);
@@ -89,10 +61,6 @@ void printIR() {
 }
 
 void printParam() {
-  Serial.println(LOW_VAL);
-  Serial.println(HIGH_VAL);
-  Serial.println(RANGE_START);
-  Serial.println(RANGE_END);
   Serial.println(MODULATION_TIME);
 }
 
@@ -121,7 +89,6 @@ void loop(void)
     
     if (digitalRead(2)) {
       setIRsignal(node_data);
-      EncodeData(1);
       SendIRCode();
       printIR();
     }
