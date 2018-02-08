@@ -1,25 +1,23 @@
-//TODO pin d8 as data selector
-// when data send low
-// freq send then high
-//TODO pin d6 ATMega reset pin high always
-//TODO serial print freq received from query ,and serial print freq d8 high when signal and low afterwards
-//TODO same for data , by default 0
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 
-const char *ssid = "rushi";
-const char *password = "1122334455";
+const char *ssid = "AR5511_6B01CC";
+const char *password = "ekyswxchs3";
 
-int reset_pin = D6;
-int select  =  D8;
+#define reset_pin  D6
+#define select    D8
 
 ESP8266WebServer server ( 80 );
 
 void getfrequency(){
+      digitalWrite(select,HIGH);
       String data="";
+      delay(50);
+      Serial.print("select=");
+      Serial.println(digitalRead(select));
       for ( int i = 0; i < server.args(); i++ ) {
        if(server.argName ( i ) == "data")
        {
@@ -29,12 +27,15 @@ void getfrequency(){
       data = data.substring(1,data.length()-1);
       Serial.print("frequency is");
       Serial.println(data);
-      digitalWrite(select,HIGH);
+            digitalWrite(select,LOW);
       server.send ( 200, "text/plain", "OK" );
 }
 
 void getdata(){
       String data="";
+      digitalWrite(select,LOW);
+      Serial.print("select=");
+      Serial.println(digitalRead(select));
       for ( int i = 0; i < server.args(); i++ ) {
        if(server.argName ( i ) == "data")
        {
@@ -44,7 +45,6 @@ void getdata(){
       data = data.substring(1,data.length()-1);
       Serial.print("data is");
       Serial.println(data);
-      digitalWrite(select,LOW);
       server.send ( 200, "text/plain", "OK" );
 }
 
