@@ -75,7 +75,7 @@ void setup() {
   
   pinMode(reset_pin,OUTPUT);
   pinMode(select,OUTPUT);
-  pinMode(select,HIGH);
+  pinMode(select,LOW);
   digitalWrite(reset_pin,HIGH);
   
   // Wait for connection

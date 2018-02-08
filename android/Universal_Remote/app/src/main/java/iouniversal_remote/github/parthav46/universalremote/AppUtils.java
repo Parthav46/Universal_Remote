@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 
 public class AppUtils {
-    public static String api_key = "AIzaSyCY0x0DzYNwXg0feUqAPWhHs9WyzHmG0qI";
+    public static String api_key = "AIzaSyDiCmDax_xTFyd75027BPEzKhsKkwgOBBM";
 
     public AppUtils() {
 

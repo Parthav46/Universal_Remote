@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (selected != null) {
+                if (true){//selected != null) {
                     task.cancel(true);
                     Intent connect = new Intent(MainActivity.this, Controller.class);
                     startActivity(connect);
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fillDeviceList() {
-        RelativeLayout bgimage = (RelativeLayout) findViewById(R.id.loadImage);
+        ProgressBar bgimage = (ProgressBar) findViewById(R.id.loading);
         bgimage.setVisibility(View.VISIBLE);
         device_list = new ArrayList<>();
         String subnet = getIPaddress();
@@ -140,8 +140,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Boolean... aBooleans) {
             if (aBooleans[0]) {
-                RelativeLayout bgimage = (RelativeLayout) findViewById(R.id.loadImage);
-                bgimage.setVisibility(View.GONE);
                 final ArrayAdapter<String> device_list_adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, device_list);
                 device_select.setAdapter(device_list_adapter);
                 runOnUiThread(new Runnable() {
@@ -154,6 +152,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            ProgressBar bgimage = (ProgressBar) findViewById(R.id.loading);
+            bgimage.setVisibility(View.GONE);
             this.cancel(true);
         }
     }
