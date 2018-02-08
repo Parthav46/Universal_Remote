@@ -16,8 +16,6 @@ void getfrequency(){
       digitalWrite(select,HIGH);
       String data="";
       delay(50);
-      Serial.print("select=");
-      Serial.println(digitalRead(select));
       for ( int i = 0; i < server.args(); i++ ) {
        if(server.argName ( i ) == "data")
        {
@@ -25,17 +23,12 @@ void getfrequency(){
        }
       }
       data = data.substring(1,data.length()-1);
-      Serial.print("frequency is");
-      Serial.println(data);
-            digitalWrite(select,LOW);
       server.send ( 200, "text/plain", "OK" );
 }
 
 void getdata(){
       String data="";
       digitalWrite(select,LOW);
-      Serial.print("select=");
-      Serial.println(digitalRead(select));
       for ( int i = 0; i < server.args(); i++ ) {
        if(server.argName ( i ) == "data")
        {
@@ -43,8 +36,6 @@ void getdata(){
        }
       }
       data = data.substring(1,data.length()-1);
-      Serial.print("data is");
-      Serial.println(data);
       server.send ( 200, "text/plain", "OK" );
 }
 
@@ -75,23 +66,15 @@ void setup() {
   
   pinMode(reset_pin,OUTPUT);
   pinMode(select,OUTPUT);
-  pinMode(select,LOW);
+  pinMode(select,HIGH);
   digitalWrite(reset_pin,HIGH);
   
   // Wait for connection
   while ( WiFi.status() != WL_CONNECTED ) {
     delay ( 500 );
-    Serial.print ( "." );
   }
 
-  Serial.println ( "" );
-  Serial.print ( "Connected to " );
-  Serial.println ( ssid );
-  Serial.print ( "IP address: " );
-  Serial.println ( WiFi.localIP() );
-
    if ( MDNS.begin ( "esp8266" ) ) {
-    Serial.println ( "MDNS responder started" );
   }
   server.on("/id",getid);
   server.on("/frequency",getfrequency);
@@ -99,7 +82,6 @@ void setup() {
   
   server.onNotFound ( handleNotFound );
   server.begin();
-  Serial.println ( "HTTP server started" );
 }
 
 void loop() {
