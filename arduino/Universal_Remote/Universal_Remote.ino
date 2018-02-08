@@ -53,54 +53,6 @@ void getid(){
   server.send(200,"text/plain",idname);
 }
 
-void getdevice() {
-  String message = "https://sheets.googleapis.com/v4/spreadsheets/";
-  String url = "";
-  String key="";
-  for ( int i = 0; i < server.args(); i++ ) {
-       if(server.argName ( i ) == "url")
-       {
-        url=server.arg(i);
-       }
-       else if(server.argName ( i ) == "key")
-       {
-        key=server.arg(i);
-       }
-  }
-    message+=url+"/values/B1%3AH1?key="+key+"&majorDimension=ROWS";
-    if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
- 
-    HTTPClient http;              //Declare an object of class HTTPClient
- 
-    http.begin("https://sheets.googleapis.com/v4/spreadsheets/15_CZXYhCdMXsj26qp584U_y1fBNpWNIITA6Tr7F3wzg/values/B1%3AH1?key=AIzaSyCY0x0DzYNwXg0feUqAPWhHs9WyzHmG0qI&majorDimension=ROWS");          //Specify request destination
-    int httpCode = http.GET();    //Send the request
-    String payload = http.getString();
-    Serial.println(httpCode);
-    Serial.println(payload);
-    if (httpCode == HTTP_CODE_OK) {           //Check the returning code
- 
-      payload = http.getString();   //Get the request response payload
-      Serial.println(payload);             //Print the response payload
- 
-    }
- 
-    http.end();                   //Close connection
- 
-  }
-  server.send ( 200, "text/plain", message );
-}
-
-void control() {
-  String message = "";
-  for ( int i = 0; i < server.args(); i++ ) {
-       if(server.argName ( i ) == "key")
-       {
-        message=server.arg(i);
-       }
-  }
-  server.send ( 200, "text/plain", message );
-}
-
 void handleNotFound() {
     String message = "URI: ";
     message += server.uri();
@@ -141,8 +93,6 @@ void setup() {
     Serial.println ( "MDNS responder started" );
   }
   server.on("/id",getid);
-  server.on("/device",getdevice);
-  server.on("/control",control);
   server.on("/frequency",getfrequency);
   server.on("/data",getdata);
   
