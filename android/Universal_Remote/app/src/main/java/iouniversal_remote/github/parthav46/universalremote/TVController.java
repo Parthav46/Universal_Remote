@@ -8,6 +8,8 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,12 +36,19 @@ public class TVController extends AppCompatActivity implements LoaderManager.Loa
         setTitle(Controller.devicename);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String[] control = {"data",controls.get(0)};
+        final String[] control = {"data",controls.get(0)};
 
         LoaderManager loaderManager = getLoaderManager();
         loaderManager.initLoader(2,null,this);
 
-
+        Button power = (Button) findViewById(R.id.power);
+        power.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                control[1] = controls.get(0);
+                buttonAsyncTask.execute(control);
+            }
+        });
     }
 
     @Override
