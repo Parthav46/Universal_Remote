@@ -54,6 +54,19 @@ public class AppUtils {
         return response;
     }
 
+    public static ArrayList<String> fetchControls(String ID, int line) {
+        String jsonResponse = null;
+        ArrayList<String> response;
+        String Url = "https://sheets.googleapis.com/v4/spreadsheets/" + ID + "/values/B" + line + "%3AZ" + line+ "?key=" + api_key + "&majorDimension=ROWS";
+        try {
+            jsonResponse = makeHttpRequestString(Url);
+            response = extractJson(jsonResponse);
+        } catch (IOException e) {
+            return null;
+        }
+        return response;
+    }
+
     public static ArrayList<String> extractJson(String jsonresponse) {
         if (jsonresponse == null) {
             return null;

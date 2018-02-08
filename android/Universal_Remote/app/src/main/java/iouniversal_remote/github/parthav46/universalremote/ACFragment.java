@@ -1,11 +1,13 @@
 package iouniversal_remote.github.parthav46.universalremote;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -28,7 +30,7 @@ public class ACFragment extends Fragment implements android.support.v4.app.Loade
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View base = inflater.inflate(R.layout.controller_list, container, false);
-        ArrayList<String> list = new ArrayList<>();
+        final ArrayList<String> list = new ArrayList<>();
 
         android.support.v4.app.LoaderManager loaderManager = getLoaderManager();
         loaderManager.initLoader(1, null, this);
@@ -36,6 +38,17 @@ public class ACFragment extends Fragment implements android.support.v4.app.Loade
         adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         ListView listView = (ListView) base.findViewById(R.id.controller_listview);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Controller.selected = position+1;
+                Controller.devicename = list.get(position);
+                Intent tvController = new Intent(getContext(),TVController.class);
+                startActivity(tvController);
+            }
+        });
+
         return base;
     }
 

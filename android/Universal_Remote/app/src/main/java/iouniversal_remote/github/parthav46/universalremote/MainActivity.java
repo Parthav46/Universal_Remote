@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             Boolean status;
             for (int i = 0; i < strings.length; i++) {
                 try {
-                    String Url = "http://" + strings[i] + "/inline";
+                    String Url = "http://" + strings[i] + "/id";
                     status = AppUtils.makeHttpRequestBoolean(Url);
                     if (status) {
                         device_list.add(strings[i]);
