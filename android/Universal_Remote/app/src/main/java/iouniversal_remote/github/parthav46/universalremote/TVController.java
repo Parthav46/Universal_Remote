@@ -36,7 +36,8 @@ public class TVController extends AppCompatActivity implements LoaderManager.Loa
         setTitle(Controller.devicename);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final String[] control = {"data",controls.get(0)};
+        final String[] control = new String[2];
+        control[0] = "data";
 
         LoaderManager loaderManager = getLoaderManager();
         loaderManager.initLoader(2,null,this);
@@ -65,6 +66,9 @@ public class TVController extends AppCompatActivity implements LoaderManager.Loa
         buttonAsyncTask.execute(frequency);
         data.remove(0);
         controls = data;
+        for(int i=0;i<controls.size();i++){
+            Log.e("controls",controls.get(i));
+        }
     }
 
     @Override

@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (selected != null) {
+                if (true){//selected != null) {
                     task.cancel(true);
                     Intent connect = new Intent(MainActivity.this, Controller.class);
                     startActivity(connect);
