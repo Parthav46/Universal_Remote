@@ -10,6 +10,9 @@ import android.view.MenuItem;
 
 public class Controller extends AppCompatActivity {
 
+    public static int selected = 0;
+    public static String devicename = "";
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
