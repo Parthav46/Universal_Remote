@@ -6,6 +6,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (true){//selected != null) {
+                if (selected != null) {
                     task.cancel(true);
                     Intent connect = new Intent(MainActivity.this, Controller.class);
                     startActivity(connect);
@@ -56,10 +57,11 @@ public class MainActivity extends AppCompatActivity {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (task.isCancelled() == true) {
+
+                if (!task.isCancelled()) task.cancel(true);
+
                     task = new ServerAsyncTask();
                     fillDeviceList();
-                }
             }
         });
 
@@ -96,6 +98,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fillDeviceList() {
+        final ArrayAdapter<String> device_list_adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, device_list);
+        device_select.setAdapter(device_list_adapter);
+        runOnUiThread(new Runnable() {
+            public void run() {
+                device_list_adapter.notifyDataSetChanged();
+            }
+        });
         ProgressBar bgimage = (ProgressBar) findViewById(R.id.loading);
         bgimage.setVisibility(View.VISIBLE);
         device_list = new ArrayList<>();
@@ -122,9 +131,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... strings) {
             Boolean status;
-            for (int i = 0; i < strings.length; i++) {
+            for (int i = 0; i < strings.length && !this.isCancelled(); i++) {
                 try {
                     String Url = "http://" + strings[i] + "/id";
+                    Log.e("ip",strings[i]);
                     status = AppUtils.makeHttpRequestBoolean(Url);
                     if (status) {
                         device_list.add(strings[i]);
