@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> device_list_adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, device_list);
         device_select.setAdapter(device_list_adapter);
 
-        fillDeviceList(); //TODO: stop asynctask upon connect
+        fillDeviceList();
 
         Button connect = (Button) findViewById(R.id.connect);
         connect.setOnClickListener(new View.OnClickListener() {
