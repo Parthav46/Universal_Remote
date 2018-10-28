@@ -12,43 +12,42 @@ const char *password = "home29391";
 
 ESP8266WebServer server ( 80 );
 
-void getfrequency(){
-      digitalWrite(line,HIGH);
-      String data="";
-      delay(50);
-      for ( int i = 0; i < server.args(); i++ ) {
-       if(server.argName ( i ) == "data")
-       {
-        data=server.arg(i);
-       }
-      }
-      data = data.substring(1,data.length()-1);
-      Serial.println(data);
-      delay(100);
-      digitalWrite(line,LOW);
-      server.send ( 200, "text/plain", "OK" );
+void getfrequency()
+{
+  digitalWrite(line,HIGH);
+  delay(50);
+  for ( int i = 0; i < server.args(); i++ ) 
+  {
+    if(server.argName ( i ) == "data")
+      data=server.arg(i);
+  }
+  String data = data.substring(1,data.length()-1);
+  Serial.println(data);
+  delay(100);
+  digitalWrite(line,LOW);
+  server.send ( 200, "text/plain", "OK" );
 }
 
-void getdata(){
-      String data="";
-      digitalWrite(line,LOW);
-      for ( int i = 0; i < server.args(); i++ ) {
-       if(server.argName ( i ) == "data")
-       {
-        data=server.arg(i);
-       }
-      }
-      data = data.substring(1,data.length()-1);
-      Serial.println(data);
-      server.send ( 200, "text/plain", "OK" );
+void getdata()
+{
+  digitalWrite(line,LOW);
+  for ( int i = 0; i < server.args(); i++ ) 
+  {
+    if(server.argName ( i ) == "data")
+    data=server.arg(i);
+  }
+  String data = data.substring(1,data.length()-1);
+  Serial.println(data);
+  server.send ( 200, "text/plain", "OK" );
 }
 
-void getid(){
-  String idname="node mcu";
-  server.send(200,"text/plain",idname);
+void getid()
+{
+  server.send(200,"text/plain","node mcu");
 }
 
-void handleNotFound() {
+void handleNotFound() 
+{
     String message = "URI: ";
     message += server.uri();
     message += "\nMethod: ";
@@ -57,13 +56,14 @@ void handleNotFound() {
     message += server.args();
     message += "\n";
   
-    for ( uint8_t i = 0; i < server.args(); i++ ) {
+    for ( uint8_t i = 0; i < server.args(); i++ ) 
       message += " " + server.argName ( i ) + ": " + server.arg ( i ) + "\n";
-  }
+  
   server.send ( 404, "text/plain", message );
 }
 
-void setup() {
+void setup() 
+{
   Serial.begin ( 9600 );
   WiFi.mode ( WIFI_STA );
   WiFi.begin ( ssid, password );
@@ -74,13 +74,12 @@ void setup() {
   digitalWrite(reset_pin,HIGH);
   
   // Wait for connection
-  while ( WiFi.status() != WL_CONNECTED ) {
+  while ( WiFi.status() != WL_CONNECTED )
     delay ( 100 );
-  }
   
   Serial.println ( WiFi.localIP() );
 
-   if ( MDNS.begin ( "esp8266" ) ) ;
+  if ( MDNS.begin ( "esp8266" ) ) ;
   server.on("/id",getid);
   server.on("/frequency",getfrequency);
   server.on("/data",getdata);
@@ -89,7 +88,7 @@ void setup() {
   server.begin();
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void loop() 
+{
   server.handleClient();
 }
