@@ -46,6 +46,10 @@ public class TVController extends AppCompatActivity implements LoaderManager.Loa
         power.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                buttonAsyncTask.cancel(true);
+                if(buttonAsyncTask.isCancelled()){
+                    buttonAsyncTask = new ButtonAsyncTask();
+                }
                 control[1] = controls.get(0);
                 buttonAsyncTask.execute(control);
             }
@@ -66,9 +70,6 @@ public class TVController extends AppCompatActivity implements LoaderManager.Loa
         buttonAsyncTask.execute(frequency);
         data.remove(0);
         controls = data;
-        for(int i=0;i<controls.size();i++){
-            Log.e("controls",controls.get(i));
-        }
     }
 
     @Override
@@ -79,10 +80,10 @@ public class TVController extends AppCompatActivity implements LoaderManager.Loa
     private class ButtonAsyncTask extends AsyncTask<String,Void,Boolean>{
         @Override
         protected Boolean doInBackground(String... strings) {
-            Boolean status;
+            Boolean status =false;
             String url = "http://" + MainActivity.selected + "/" + strings[0] + "?data=\"" + strings[1] + "\"";
             try {
-                status = AppUtils.makeHttpRequestBoolean(url);
+                if(!this.isCancelled()) status = AppUtils.makeHttpRequestBoolean(url);
             } catch (IOException e) {
                 status = false;
             }

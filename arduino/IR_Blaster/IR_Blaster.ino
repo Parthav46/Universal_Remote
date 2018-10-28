@@ -1,12 +1,12 @@
-int IRledPin = 6;
-int DataLine = 2;
+#define IRledPin = 6;
+#define DataLine = 2;
 
 int MODULATION_TIME = 26;
 
 String node_data = "";
 
 uint16_t IRsignal[200] = {0};
-  byte arraySize = 0;
+byte arraySize = 0;
 
 void pulseIR(long microsecs)
 {
@@ -35,10 +35,12 @@ void SendIRCode()
   }
 }
 
-void setIRsignal(String indata) {
+void setIRsignal(String indata)
+{
   int comma = indata.indexOf(",");
-    arraySize = 0;
-  while (comma > 0) {
+  arraySize = 0;
+  while (comma > 0) 
+  {
     IRsignal[arraySize] = (int) indata.substring(0, comma).toInt();
     arraySize++;
     indata = indata.substring(comma+1);
@@ -46,21 +48,24 @@ void setIRsignal(String indata) {
   }
 }
 
-void setParams(String data) {
+void setParams(String data) 
+{
   int comma = data.indexOf(',');
   MODULATION_TIME = (int) data.substring(0, comma).toInt();
 }
 
-void printIR() {
+void printIR() 
+{
   Serial.println(arraySize);
-  for (int i = 0; i < arraySize; i++) {
-    Serial.print(IRsignal[i++]);
-    Serial.print(" ");
-    Serial.println(IRsignal[i]);
+  for (int i = 0; i < arraySize; i++) 
+  {
+    String temp = IRsignal[i++]+" "+IRsignal[i];
+    Serial.println(temp);
   }
 }
 
-void printParam() {
+void printParam() 
+{
   Serial.println(MODULATION_TIME);
 }
 
@@ -68,7 +73,6 @@ void setup(void)
 {
   pinMode(IRledPin, OUTPUT);
   pinMode(DataLine, INPUT);
-
   Serial.begin(9600);
 }
 
@@ -78,21 +82,24 @@ void loop(void)
   {
     delay(10);
     char temp = Serial.read();
-    while(temp != '\n'){
+    while(temp != '\n')
+    {
       node_data += temp;
       delay(1);
       temp = Serial.read();
     }
   }
 
-  if (node_data != "") {
-    
-    if (digitalRead(2)) {
+  if (node_data != "") 
+  {  
+    if (digitalRead(2)) 
+    {
       setIRsignal(node_data);
       SendIRCode();
       printIR();
     }
-    else {
+    else 
+    {
       setParams(node_data);
       printParam();
     }

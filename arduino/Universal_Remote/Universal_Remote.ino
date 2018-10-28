@@ -4,11 +4,11 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 
-const char *ssid = "AR5511_6B01CC";
-const char *password = "ekyswxchs3";
+const char *ssid = "NETGEAR300";
+const char *password = "home29391";
 
 #define reset_pin  D6
-#define select    D8
+#define line  D8
 
 ESP8266WebServer server ( 80 );
 
@@ -39,12 +39,13 @@ void getdata(){
       server.send ( 200, "text/plain", "OK" );
 }
 
-void getid(){
-  String idname="node mcu";
-  server.send(200,"text/plain",idname);
+void getid()
+{
+  server.send(200,"text/plain","node mcu");
 }
 
-void handleNotFound() {
+void handleNotFound() 
+{
     String message = "URI: ";
     message += server.uri();
     message += "\nMethod: ";
@@ -53,18 +54,20 @@ void handleNotFound() {
     message += server.args();
     message += "\n";
   
-    for ( uint8_t i = 0; i < server.args(); i++ ) {
+    for ( uint8_t i = 0; i < server.args(); i++ ) 
       message += " " + server.argName ( i ) + ": " + server.arg ( i ) + "\n";
-  }
+  
   server.send ( 404, "text/plain", message );
 }
 
-void setup() {
+void setup() 
+{
   Serial.begin ( 9600 );
   WiFi.mode ( WIFI_STA );
   WiFi.begin ( ssid, password );
   
   pinMode(reset_pin,OUTPUT);
+
   pinMode(select,OUTPUT);
   pinMode(select,HIGH);
   digitalWrite(reset_pin,HIGH);
@@ -77,6 +80,7 @@ void setup() {
   Serial.println ( WiFi.localIP() );
    if ( MDNS.begin ( "esp8266" ) ) {
   }
+  
   server.on("/id",getid);
   server.on("/frequency",getfrequency);
   server.on("/data",getdata);
@@ -85,7 +89,7 @@ void setup() {
   server.begin();
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void loop() 
+{
   server.handleClient();
 }
