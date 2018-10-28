@@ -12,33 +12,31 @@ const char *password = "home29391";
 
 ESP8266WebServer server ( 80 );
 
-void getfrequency()
-{
-  digitalWrite(line,HIGH);
-  delay(50);
-  for ( int i = 0; i < server.args(); i++ ) 
-  {
-    if(server.argName ( i ) == "data")
-      data=server.arg(i);
-  }
-  String data = data.substring(1,data.length()-1);
-  Serial.println(data);
-  delay(100);
-  digitalWrite(line,LOW);
-  server.send ( 200, "text/plain", "OK" );
+void getfrequency(){
+      digitalWrite(select,HIGH);
+      String data="";
+      delay(50);
+      for ( int i = 0; i < server.args(); i++ ) {
+       if(server.argName ( i ) == "data")
+       {
+        data=server.arg(i);
+       }
+      }
+      data = data.substring(1,data.length()-1);
+      server.send ( 200, "text/plain", "OK" );
 }
 
-void getdata()
-{
-  digitalWrite(line,LOW);
-  for ( int i = 0; i < server.args(); i++ ) 
-  {
-    if(server.argName ( i ) == "data")
-    data=server.arg(i);
-  }
-  String data = data.substring(1,data.length()-1);
-  Serial.println(data);
-  server.send ( 200, "text/plain", "OK" );
+void getdata(){
+      String data="";
+      digitalWrite(select,LOW);
+      for ( int i = 0; i < server.args(); i++ ) {
+       if(server.argName ( i ) == "data")
+       {
+        data=server.arg(i);
+       }
+      }
+      data = data.substring(1,data.length()-1);
+      server.send ( 200, "text/plain", "OK" );
 }
 
 void getid()
@@ -69,17 +67,20 @@ void setup()
   WiFi.begin ( ssid, password );
   
   pinMode(reset_pin,OUTPUT);
-  pinMode(line,OUTPUT);
-  digitalWrite(line,LOW);
+
+  pinMode(select,OUTPUT);
+  pinMode(select,HIGH);
   digitalWrite(reset_pin,HIGH);
   
   // Wait for connection
-  while ( WiFi.status() != WL_CONNECTED )
-    delay ( 100 );
-  
+  while ( WiFi.status() != WL_CONNECTED ) {
+    delay ( 500 );
+  }
+  Serial.print ( "IP address: " );
   Serial.println ( WiFi.localIP() );
-
-  if ( MDNS.begin ( "esp8266" ) ) ;
+   if ( MDNS.begin ( "esp8266" ) ) {
+  }
+  
   server.on("/id",getid);
   server.on("/frequency",getfrequency);
   server.on("/data",getdata);
